@@ -2,6 +2,7 @@
 #define DRAWER_H
 #include <QGraphicsScene>
 
+class QGraphicsScene;
 class Drawer
 {
 public:

@@ -1,5 +1,5 @@
 #include "drawer.h"
-#include "Qtransformfile.h"
+#include "transformfile.h"
 #include <QList>
 #include <QGraphicsEllipseItem>
 #include <QBrush>
@@ -8,17 +8,17 @@ Drawer::Drawer()
 
 }
 QVector<QGraphicsEllipseItem*> Drawer::drawPoints(QGraphicsScene *scene, QString filePath){
-    Qtransformfile qtf;
-    int pointsCount = qtf.pointsCount(qtf.read(filePath));
+    transformFile tf;
+    int pointsCount = tf.pointsMax(tf.read(filePath));
     QVector<QGraphicsEllipseItem*> pointsArray;
 
     for (int i = 0;i<pointsCount;i++){
         qreal x = qrand() % 400;
         qreal y = qrand() % 400;
-        QGraphicsEllipseItem* ellipse = new QGraphicsEllipseItem(x - 2, y - 2, 4, 4);
-        pointsArray.append(ellipse);
-        ellipse->setBrush(Qt::black);
-        scene -> addItem(ellipse);
+        QGraphicsEllipseItem* point = new QGraphicsEllipseItem(x - 2, y - 2, 4, 4);
+        pointsArray.append(point);
+        point->setBrush(Qt::black);
+        scene -> addItem(point);
         QGraphicsTextItem* textItem = new QGraphicsTextItem(QString::number(i + 1));
         textItem->setPos(x + 5, y - 10);
         scene->addItem(textItem);
@@ -26,9 +26,9 @@ QVector<QGraphicsEllipseItem*> Drawer::drawPoints(QGraphicsScene *scene, QString
     return pointsArray;
 }
 void Drawer::drawEdges(QGraphicsScene *scene,QString filePath,QVector<QGraphicsEllipseItem*> pointsArray){
-    Qtransformfile qtf;
-    QVector<QVector<int>> matrix = qtf.buildMatrix(qtf.read(filePath));
-    int len = qtf.pointsCount(qtf.read(filePath));
+    transformFile tf;
+    QVector<QVector<int>> matrix = tf.buildMatrix(tf.read(filePath));
+    int len = tf.pointsMax(tf.read(filePath));
     for (int i = 0; i< len;i++){
         for (int j=0;j<len;j++){
             if (matrix[i][j] == 1){

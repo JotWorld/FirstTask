@@ -1,13 +1,13 @@
-#include "Qtransformfile.h"
+#include "transformfile.h"
 #include <QList>
 #include <QString>
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
-Qtransformfile::Qtransformfile(){
+transformFile::transformFile(){
 
 }
-QList<QString> Qtransformfile::read(QString filePath){
+QList<QString> transformFile::read(QString filePath){
     QList<QString> strArray;
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) return strArray;
@@ -22,7 +22,7 @@ QList<QString> Qtransformfile::read(QString filePath){
     }
     return strArray;
 }
-QVector<int> Qtransformfile::strToInt(QString row){
+QVector<int> transformFile::strToInt(QString row){
     QVector<int> result;
     QList<QString> strNumbers = row.split(' ');
     int number1 = strNumbers[0].toInt();
@@ -31,8 +31,8 @@ QVector<int> Qtransformfile::strToInt(QString row){
     result.append(number2);
     return result;
 }
-QVector<QVector<int>> Qtransformfile::buildMatrix(QList<QString> strArray){
-    int matrixLength = this->pointsCount(strArray);
+QVector<QVector<int>> transformFile::buildMatrix(QList<QString> strArray){
+    int matrixLength = this->pointsMax(strArray);
     QVector<QVector<int>> adjancyMatrix(matrixLength, QVector<int>(matrixLength));
     for (int i = 0; i< matrixLength; i++){
         for(int j = 0; j< matrixLength; j++){
@@ -51,16 +51,9 @@ QVector<QVector<int>> Qtransformfile::buildMatrix(QList<QString> strArray){
             qDebug() << "Неправильный формат данных";
         }
     }
-    for (int i = 0; i< matrixLength; i++){
-        for(int j = 0; j< matrixLength; j++){
-            qDebug().noquote() << adjancyMatrix[i][j];
-
-        }
-        qDebug() << "";
-    }
     return adjancyMatrix;
 }
-int Qtransformfile::pointsCount(QList<QString> strArray){
+int transformFile::pointsCount(QList<QString> strArray){
     QList<int> uniqueVertexes;
     QVector<int> row;
     foreach(QString str, strArray){
@@ -73,4 +66,24 @@ int Qtransformfile::pointsCount(QList<QString> strArray){
         }
     }
     return uniqueVertexes.length();
+}
+int transformFile::pointsMax(QList<QString> strArray){
+    QList<int> uniqueVertexes;
+    QVector<int> row;
+    foreach(QString str, strArray){
+        row = strToInt(str);
+        if (uniqueVertexes.count(row[0]) == 0){
+            uniqueVertexes.append(row[0]);
+        }
+        if (uniqueVertexes.count(row[1]) == 0){
+            uniqueVertexes.append(row[1]);
+        }
+    }
+    int max = 0;
+    for (int i = 0;i<uniqueVertexes.length();i++){
+        if(uniqueVertexes[i] > max){
+            max = uniqueVertexes[i];
+        }
+    }
+    return max;
 }
