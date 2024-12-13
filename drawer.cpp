@@ -27,7 +27,7 @@ QVector<QGraphicsEllipseItem*> Drawer::drawPoints(QGraphicsScene *scene, QString
 }
 void Drawer::drawEdges(QGraphicsScene *scene,QString filePath,QVector<QGraphicsEllipseItem*> pointsArray){
     Qtransformfile qtf;
-    QVector<QVector<int>> matrix = qtf.buildmatrix(qtf.read(filePath));
+    QVector<QVector<int>> matrix = qtf.buildMatrix(qtf.read(filePath));
     int len = qtf.pointsCount(qtf.read(filePath));
     for (int i = 0; i< len;i++){
         for (int j=0;j<len;j++){

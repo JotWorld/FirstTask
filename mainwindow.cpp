@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     QGraphicsScene *scene = new QGraphicsScene(this);
     QString filePath = "C:/Users/acer/Documents/qgraph/qtgraph.txt";
     QList<QString> strArray = qtf.read("C:/Users/acer/Documents/qgraph/qtgraph.txt");
-    QVector<QVector<int>> adjancyMatrix = qtf.buildmatrix(strArray);
+    QVector<QVector<int>> adjancyMatrix = qtf.buildMatrix(strArray);
     int matrixLength = qtf.pointsCount(strArray);
     dr.drawEdges(scene,filePath,dr.drawPoints(scene,filePath));
     ui->graphicsView->setScene(scene);

@@ -31,7 +31,7 @@ QVector<int> Qtransformfile::strToInt(QString row){
     result.append(number2);
     return result;
 }
-QVector<QVector<int>> Qtransformfile::buildmatrix(QList<QString> strArray){
+QVector<QVector<int>> Qtransformfile::buildMatrix(QList<QString> strArray){
     int matrixLength = this->pointsCount(strArray);
     QVector<QVector<int>> adjancyMatrix(matrixLength, QVector<int>(matrixLength));
     for (int i = 0; i< matrixLength; i++){
@@ -44,8 +44,12 @@ QVector<QVector<int>> Qtransformfile::buildmatrix(QList<QString> strArray){
         row = strToInt(str);
         int i = row[0];
         int j = row[1];
+        if ((i <= matrixLength) && (j <= matrixLength)){
         adjancyMatrix[i-1][j-1] = 1;
-        adjancyMatrix[j-1][i-1] = 1;
+        adjancyMatrix[j-1][i-1] = 1;}
+        else{
+            qDebug() << "Неправильный формат данных";
+        }
     }
     for (int i = 0; i< matrixLength; i++){
         for(int j = 0; j< matrixLength; j++){
