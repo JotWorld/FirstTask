@@ -7,11 +7,20 @@
 transformFile::transformFile(){
 
 }
+QString transformFile::readMethod(QString filePath){
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) return " ";
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    qDebug() << line;
+    return line;
+}
 QList<QString> transformFile::read(QString filePath){
     QList<QString> strArray;
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) return strArray;
     QTextStream stream(&file);
+    QString line = stream.readLine();
     while(!stream.atEnd())
     {
         strArray.append(stream.readLine());
@@ -52,6 +61,24 @@ QVector<QVector<int>> transformFile::buildMatrix(QList<QString> strArray){
         }
     }
     return adjancyMatrix;
+}
+QVector<QVector<int>> transformFile::buildArray(QList<QString> strArray){
+
+    int arrayLength = strArray.length();
+    QVector<QVector<int>> edgeArray(arrayLength, QVector<int>());
+    QVector<int> row;
+    int i = 0;
+    foreach(QString str, strArray){
+        row = strToInt(str);
+        edgeArray[i] = row;
+        i++;
+}
+    for(int i =0; i<arrayLength;i++){
+        int local1 = edgeArray[i][0];
+        int local2 = edgeArray[i][1];
+        qDebug() << i+1 << "строка" << local1 << " " << local2;
+    }
+    return edgeArray;
 }
 int transformFile::pointsCount(QList<QString> strArray){
     QList<int> uniqueVertexes;

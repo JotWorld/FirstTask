@@ -3,6 +3,7 @@
 #include <QList>
 #include <QGraphicsEllipseItem>
 #include <QBrush>
+#include <QDebug>
 Drawer::Drawer()
 {
 
@@ -25,6 +26,7 @@ QVector<QGraphicsEllipseItem*> Drawer::drawPoints(QGraphicsScene *scene, QString
     }
     return pointsArray;
 }
+
 void Drawer::drawEdges(QGraphicsScene *scene,QString filePath,QVector<QGraphicsEllipseItem*> pointsArray){
     transformFile tf;
     QVector<QVector<int>> matrix = tf.buildMatrix(tf.read(filePath));
@@ -43,5 +45,24 @@ void Drawer::drawEdges(QGraphicsScene *scene,QString filePath,QVector<QGraphicsE
                 scene ->addItem(line);
             }
         }
+    }
+}
+void Drawer::drawEdges(QGraphicsScene *scene,QVector<QVector<int>> edgeArray,QVector<QGraphicsEllipseItem*> pointsArray){
+    int len = edgeArray.size();
+    qDebug() << len << " длина";
+    for (int i = 0; i< len;i++){
+                int local1 = edgeArray[i][0];
+                int local2 = edgeArray[i][1];
+                qDebug() << "создание локалки  " << local1 << " " << local2;
+                QGraphicsEllipseItem *point1 = pointsArray[local1-1];
+                int p1x = point1->rect().center().x();
+                int p1y = point1->rect().center().y();
+                QGraphicsEllipseItem *point2 = pointsArray[local2-1];
+                int p2x = point2->rect().center().x();
+                int p2y = point2->rect().center().y();
+                QGraphicsLineItem* line = new QGraphicsLineItem(p1x,p1y,p2x,p2y);
+                line -> setPen(QPen(Qt::black));
+                scene ->addItem(line);
+
     }
 }
