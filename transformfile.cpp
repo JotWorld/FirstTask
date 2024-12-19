@@ -15,12 +15,24 @@ QString transformFile::readMethod(QString filePath){
     qDebug() << line;
     return line;
 }
+QVector<int> transformFile::readPoints(QString filePath){
+    QVector<int> points ={};
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) return points;
+    QTextStream stream(&file);
+    QString localLine = stream.readLine();
+    QString line = stream.readLine();
+    points = strToInt(line);
+    qDebug() << line;
+    return points;
+}
 QList<QString> transformFile::read(QString filePath){
     QList<QString> strArray;
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) return strArray;
     QTextStream stream(&file);
     QString line = stream.readLine();
+    QString localLine = stream.readLine();
     while(!stream.atEnd())
     {
         strArray.append(stream.readLine());
@@ -113,4 +125,73 @@ int transformFile::pointsMax(QList<QString> strArray){
         }
     }
     return max;
+}
+int transformFile::cost(int a, int b){
+    return abs(a-b);
+}
+QVector<QVector<int>> transformFile::aStar(QString filePath){
+    QVector<int> pathPoints = readPoints(filePath);
+    int start = pathPoints[0];
+    qDebug() << "start is " << start;
+    int end = pathPoints[1];
+    QVector<QVector<int>> resultPath;
+    QVector<int> row = {0,0};
+    qDebug() << "end is " << end;
+    QVector<QVector<int>> matrix = buildMatrix(read(filePath));
+    QVector<int> reachablePoints = {};
+    QVector<int> exploredPoints = {};
+    QVector<int> path(pointsMax((read(filePath))),-1);
+    int currentPoint = start;
+    while (currentPoint != end){
+
+        exploredPoints.append(currentPoint);
+
+        QVector<int> reachablePointsInMatrix = matrix[currentPoint-1];
+        for(int i = 0; i < matrix.size();i++){
+            int localCount = 0;
+            for(int j = 0; j < matrix.size();j++){
+            if(matrix[i][j] == 1){
+                localCount++;
+            }
+
+        }
+            if (localCount == 1){
+                if ((i+1 != start) || (i+1 != end)){
+                    if (exploredPoints.count(i+1) > 1)
+                    exploredPoints.append(i+1);
+                }
+
+
+            }
+        }
+        for(int i = 0; i < reachablePointsInMatrix.size();i++){
+            if(reachablePointsInMatrix[i] == 1){
+                if (not (exploredPoints.contains(i+1))){
+                    reachablePoints.append(i+1);
+
+                }
+            }
+        }
+        qDebug() << "добавлено";
+        for(int i = 0; i < exploredPoints.size();i++){
+            qDebug() << exploredPoints[i];
+        }
+        for (int explored : exploredPoints) {
+            reachablePoints.removeAll(explored);
+        }
+
+        auto tmp=reachablePoints[qrand()%reachablePoints.size()];
+        path[tmp-1]=currentPoint-1;
+        currentPoint = tmp;
+
+
+    }
+    qDebug() << "путь";
+    for(int i = 0; i < path.size();i++){
+        if(path[i] != -1){
+        resultPath.append({path[i]+1,i+1});
+        qDebug() << path[i]+1 << i+1 << "точка";}
+
+    }
+    return resultPath;
 }

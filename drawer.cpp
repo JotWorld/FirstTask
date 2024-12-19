@@ -12,11 +12,14 @@ QVector<QGraphicsEllipseItem*> Drawer::drawPoints(QGraphicsScene *scene, QString
     transformFile tf;
     int pointsCount = tf.pointsMax(tf.read(filePath));
     QVector<QGraphicsEllipseItem*> pointsArray;
-
+    qreal x = 0;
+    qreal y = 40;
     for (int i = 0;i<pointsCount;i++){
-        qreal x = qrand() % 400;
-        qreal y = qrand() % 400;
-        QGraphicsEllipseItem* point = new QGraphicsEllipseItem(x - 2, y - 2, 4, 4);
+        x+=100;
+        if (x == 400){
+            x = 100; y+= 100;
+        }
+        QGraphicsEllipseItem* point = new QGraphicsEllipseItem(x - qrand() % 50, y - qrand() % 50 , 4, 4);
         pointsArray.append(point);
         point->setBrush(Qt::black);
         scene -> addItem(point);
@@ -47,22 +50,22 @@ void Drawer::drawEdges(QGraphicsScene *scene,QString filePath,QVector<QGraphicsE
         }
     }
 }
-void Drawer::drawEdges(QGraphicsScene *scene,QVector<QVector<int>> edgeArray,QVector<QGraphicsEllipseItem*> pointsArray){
-    int len = edgeArray.size();
-    qDebug() << len << " длина";
-    for (int i = 0; i< len;i++){
-                int local1 = edgeArray[i][0];
-                int local2 = edgeArray[i][1];
-                qDebug() << "создание локалки  " << local1 << " " << local2;
-                QGraphicsEllipseItem *point1 = pointsArray[local1-1];
+void Drawer::drawAStar(QGraphicsScene *scene,QString filePath,QVector<QGraphicsEllipseItem*> pointsArray){
+    transformFile tf;
+    QVector<QVector<int>> aStarPath = tf.aStar(filePath);
+    for (int i = 0; i< aStarPath.size();i++){
+
+
+                QGraphicsEllipseItem *point1 = pointsArray[aStarPath[i][0]-1];
                 int p1x = point1->rect().center().x();
                 int p1y = point1->rect().center().y();
-                QGraphicsEllipseItem *point2 = pointsArray[local2-1];
+                QGraphicsEllipseItem *point2 = pointsArray[aStarPath[i][1]-1];
                 int p2x = point2->rect().center().x();
                 int p2y = point2->rect().center().y();
                 QGraphicsLineItem* line = new QGraphicsLineItem(p1x,p1y,p2x,p2y);
                 line -> setPen(QPen(Qt::black));
                 scene ->addItem(line);
+
 
     }
 }

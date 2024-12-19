@@ -16,19 +16,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     QGraphicsScene *scene = new QGraphicsScene(this);
     QString filePath = ":/new/files/qtgraph.txt";
     if (tf.readMethod(filePath) == "adjancyMatrix"){
-        dr.drawEdges(scene,filePath,dr.drawPoints(scene,filePath));
-    }
-    else if (tf.readMethod(filePath) == "edgeArray"){
-        QVector<QVector<int>> edgeArray = tf.buildArray(tf.read(filePath));
-        dr.drawEdges(scene,edgeArray,dr.drawPoints(scene,filePath));
+        dr.drawAStar(scene,filePath,dr.drawPoints(scene,filePath));
     }
     else{
         qDebug() << "некорретный ввод данных";
     }
 
     ui->graphicsView->setScene(scene);
-    ui->graphicsView->setFixedSize(400, 400);
-    ui->graphicsView->setSceneRect(0, 0, 400, 400);
+    ui->graphicsView->setFixedSize(500, 500);
+    ui->graphicsView->setSceneRect(0, 0, 500, 500);
 
 }
 

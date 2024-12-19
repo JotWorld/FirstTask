@@ -13,7 +13,9 @@ public:
     int pointsCount(QList<QString> strArray);
     QVector<int> strToInt(QString row);
     int pointsMax(QList<QString> strArray);
-
+    QVector<QVector<int>> aStar(QString pathFile);
+    QVector<int> readPoints(QString filePath);
+    int cost(int a,int b);
 };
 
 #endif // QREADFILE_H
